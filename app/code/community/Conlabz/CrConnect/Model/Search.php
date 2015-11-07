@@ -2,13 +2,11 @@
 
 class Conlabz_CrConnect_Model_Search
 {
-    /*
+    /**
      * Get Search Filters values
      */
-
     public function getFilter()
     {
-
         $filter = array();
 
         // Generate Categories Filter
@@ -41,17 +39,14 @@ class Conlabz_CrConnect_Model_Search
         return $filter;
     }
 
-    /*
-     * Get categories tree recurcively function 
+    /**
+     * Get categories tree recurcively function
      *
      * @return array of categories of one level
      */
-
     public function getCategories($categories)
     {
-
         foreach ($categories as $category) {
-            $cat = Mage::getModel('catalog/category')->load($category->getId());
             $prefix = "";
             for ($i = 0; $i < $category->getLevel() - 2; $i++) {
                 $prefix .= "&nbsp;";
@@ -65,17 +60,14 @@ class Conlabz_CrConnect_Model_Search
         return $array;
     }
 
-    /*
+    /**
      * Get Search result
      *
      * @param int category - category ID
      * @param string product - part of name or description
-     *
      */
-
     public function getSearch($category = false, $product = "", $store = false)
     {
-
         $products = Mage::getModel('catalog/product')->getCollection()
                 ->addAttributeToSelect("name")
                 ->addAttributeToSelect("description")
