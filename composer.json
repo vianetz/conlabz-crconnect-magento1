@@ -1,0 +1,14 @@
+{
+    "name": "conlabz/magex_crconnect",
+    "type": "magento-module",
+    "description": "CleverReach Connect",
+    "authors": [
+        {
+            "name": "conlabz GmbH",
+            "email": "info@conlabz.de"
+        }
+    ],
+    "require": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}
