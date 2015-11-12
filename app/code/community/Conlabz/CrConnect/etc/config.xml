@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Conlabz_CrConnect>
-            <version>3.0.6</version>
+            <version>3.1.0</version>
         </Conlabz_CrConnect>
     </modules>
     <global>
@@ -94,7 +94,7 @@
             <modules>
                 <Conlabz_CrConnect>
                     <files>
-                        <default>Conlabz_CleverReach.csv</default>
+                        <default>Conlabz_CrConnect.csv</default>
                     </files>
                 </Conlabz_CrConnect>
             </modules>
