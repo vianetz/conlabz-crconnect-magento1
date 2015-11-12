@@ -50,7 +50,7 @@
                         <method>trackingCodesSet</method>
                     </crconnect_customer_session_init>
                 </observers>
-            </customer_session_init> 
+            </customer_session_init>
             <checkout_onepage_controller_success_action>
                 <observers>
                     <crconnect_checkout_onepage_controller_success_action>
@@ -59,7 +59,7 @@
                         <method>checkoutSuccess</method>
                     </crconnect_checkout_onepage_controller_success_action>
                 </observers>
-            </checkout_onepage_controller_success_action>   
+            </checkout_onepage_controller_success_action>
             <sales_order_place_after>
                 <observers>
                     <crconnect_sales_order_place_after>
@@ -128,21 +128,21 @@
     </adminhtml>
     <admin>
         <routers>
-            <crconnect>
-                <use>admin</use>
-                <args>
-                    <module>Conlabz_CrConnect</module>
-                    <frontName>crconnect</frontName>
-                </args>
-            </crconnect>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <crconnect after="Mage_Adminhtml">Conlabz_CrConnect_Adminhtml</crconnect>
+                    </modules>
+                </args>
+            </adminhtml>
         </routers>
-    </admin>    
+    </admin>
     <frontend>
         <translate>
             <modules>
                 <Conlabz_CrConnect>
                     <files>
-                        <default>Conlabz_CleverReach.csv</default>
+                        <default>Conlabz_CrConnect.csv</default>
                     </files>
                 </Conlabz_CrConnect>
             </modules>

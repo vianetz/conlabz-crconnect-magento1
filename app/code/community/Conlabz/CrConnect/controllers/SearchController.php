@@ -1,10 +1,8 @@
 <?php
 class Conlabz_CrConnect_SearchController extends Mage_Core_Controller_Front_Action
 {
-
     public function indexAction()
     {
-
         $systemPassword = Mage::helper("crconnect")->getCleverReachFeedPassword();
 
         $store = $this->getRequest()->getParam('store');
