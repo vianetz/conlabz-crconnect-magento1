@@ -1,7 +1,7 @@
 {
-    "name": "conlabz/magex_crconnect",
+    "name": "conlabz/conlabz_crconnect",
     "type": "magento-module",
-    "description": "CleverReach Connect",
+    "description": "Synchronizes your Magento subscribers, customers and sales with CleverReach Email Marketing Software.",
     "authors": [
         {
             "name": "conlabz GmbH",
