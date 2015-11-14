@@ -131,7 +131,7 @@
             <adminhtml>
                 <args>
                     <modules>
-                        <crconnect after="Mage_Adminhtml">Conlabz_CrConnect_Adminhtml</crconnect>
+                        <Conlabz_CrConnect after="Mage_Adminhtml">Conlabz_CrConnect_Adminhtml</Conlabz_CrConnect>
                     </modules>
                 </args>
             </adminhtml>
@@ -155,6 +155,13 @@
                     </modules>
                 </args>
             </newsletter>
+            <crconnect>
+                <use>standard</use>
+                <args>
+                    <module>Conlabz_CrConnect</module>
+                    <frontName>crconnect</frontName>
+                </args>
+            </crconnect>
         </routers>
         <layout>
             <updates>

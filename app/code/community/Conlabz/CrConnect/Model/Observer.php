@@ -157,22 +157,23 @@ class Conlabz_CrConnect_Model_Observer
                     Mage::helper("crconnect")->log($result);
                 } else {
                     Mage::helper("crconnect")->log("Force sync orders for guest customer");
-                    $billingAddress = $order->getBillingAddress()->getData();
+                    $billingAddress = $order->getBillingAddress();
                     if ($billingAddress) {
                         Mage::helper("crconnect")->log("Prepare info based on billing address");
                         $crReceiver = array (
                             'email' => $email,
                             'source' => 'MAGENTO',
                             'attributes' => array(
-                                0 => array("key" => "firstname", "value" => $billingAddress["firstname"]),
-                                1 => array("key" => "lastname", "value" => @$billingAddress["lastname"]),
-                                2 => array("key" => "street", "value" => @$billingAddress["street"]),
-                                3 => array("key" => "zip", "value" => @$billingAddress["postcode"]),
-                                4 => array("key" => "city", "value" => @$billingAddress["city"]),
-                                5 => array("key" => "country", "value" => @$billingAddress["country_id"]),
-                                6 => array("key" => "salutation", "value" => @$billingAddress["prefix"]),
-                                7 => array("key" => "title", "value" => @$billingAddress["suffix"]),
-                                8 => array("key" => "company", "value" => @$billingAddress["company"]))
+                                array("key" => "firstname", "value" => $billingAddress->getFirstname()),
+                                array("key" => "lastname", "value" => $billingAddress->getLastname()),
+                                array("key" => "street", "value" => $billingAddress->getStreet()),
+                                array("key" => "zip", "value" => $billingAddress->getPostcode()),
+                                array("key" => "city", "value" => $billingAddress->getCity()),
+                                array("key" => "country", "value" => $billingAddress->getCountryId()),
+                                array("key" => "salutation", "value" => $billingAddress->getPrefix()),
+                                array("key" => "title", "value" => $billingAddress->getSuffix()),
+                                array("key" => "company", "value" => $billingAddress->getCompany())
+                            )
                         );
 
                         $cookie = Mage::getSingleton('core/cookie');
@@ -206,28 +207,29 @@ class Conlabz_CrConnect_Model_Observer
 
     public function configSave()
     {
-        if (Mage::app()->getRequest()->getParam('section') == "newsletter" || Mage::app()->getRequest()->getParam('section') == "crroot") {
-            if (Mage::helper("crconnect")->isDoubleOptInEnabled()) {
-                $groupsIds = Mage::helper("crconnect")->getGroupsIds();
-                $formsIds = Mage::helper("crconnect")->getFormsIds();
-                $allow = true;
-                foreach ($groupsIds as $groupsId) {
-                    if (!$groupsId) {
-                        $allow = false;
-                    }
-                }
-                foreach ($formsIds as $formsId) {
-                    if (!$formsId) {
-                        $allow = false;
-                    }
-                }
-                $formId = Mage::helper("crconnect")->getDefaultFormId();
-                if (!$formId) {
+        $currentSection = Mage::app()->getRequest()->getParam('section');
+        if (in_array($currentSection, array('newsletter', 'crroot')) &&
+            Mage::helper("crconnect")->isDoubleOptInEnabled()
+        ) {
+            $groupsIds = Mage::helper("crconnect")->getGroupsIds();
+            $formsIds = Mage::helper("crconnect")->getFormsIds();
+            $allow = true;
+            foreach ($groupsIds as $groupsId) {
+                if (!$groupsId) {
                     $allow = false;
                 }
-                if (!$allow) {
-                    Mage::getSingleton('adminhtml/session')->addError(Mage::helper('catalog')->__('Double Opt-In enabled, please select Form(s) and Group(s) for your Customer Groups'));
+            }
+            foreach ($formsIds as $formsId) {
+                if (!$formsId) {
+                    $allow = false;
                 }
+            }
+            $formId = Mage::helper("crconnect")->getDefaultFormId();
+            if (!$formId) {
+                $allow = false;
+            }
+            if (!$allow) {
+                Mage::getSingleton('adminhtml/session')->addError(Mage::helper('catalog')->__('Double Opt-In enabled, please select Form(s) and Group(s) for your Customer Groups'));
             }
         }
     }

@@ -64,7 +64,7 @@ class Conlabz_CrConnect_Model_Search
      * Get Search result
      *
      * @param int category - category ID
-     * @param string product - part of name or description
+     * @param array
      */
     public function getSearch($category = false, $product = "", $store = false)
     {

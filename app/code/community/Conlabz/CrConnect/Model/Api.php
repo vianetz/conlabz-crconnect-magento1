@@ -34,7 +34,6 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
      */
     public function getSoapClient()
     {
-
         try {
             $client = new SoapClient($this->_helper->getWsdl(), array("trace" => true, "exception" => 0));
             return $client;
@@ -48,7 +47,6 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
 
     public function subscribe($customer = false, $groupId = 0)
     {
-
         if ($this->isConnected()) {
             if (!$customer) {
                 $customer = Mage::getSingleton('customer/session')->getCustomer();
@@ -59,7 +57,6 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
                 $this->_helper->log($this->_helper->__("CALL: receiverAdd - SUCCESS"));
                 $this->_helper->log($crReceiver);
                 $this->_helper->log("receiverAdd: GroupId: ".$groupId);
-
                 return true;
             } else {
                 $this->_helper->log($this->_helper->__("CALL: receiverAdd - FAIL, then call receiverSetActive:".$customer->getEmail()));
@@ -68,14 +65,12 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
                 $addResult = $this->receiverSetActive($customer->getEmail(), $groupId);
             }
             return true;
-
         }
         return false;
     }
 
     public function update($customer = false)
     {
-
         if ($this->isConnected()) {
             if (!$customer) {
                 $customer = Mage::getSingleton('customer/session')->getCustomer();
@@ -93,21 +88,18 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
 
             }
             return true;
-
         }
         return false;
     }
 
     public function unsubscribe($email = false, $groupId = 0)
     {
-
         if ($this->isConnected() && $email) {
             $result = $this->receiverSetInactive($email, $groupId);
             if ($result->status == self::SUCCESS_STATUS) {
                 $this->_helper->log($this->_helper->__("CALL: receiverSetInactive - SUCCESS, Email:".$email." | GroupId:".$groupId));
                 return true;
             }
-
         }
         return false;
     }
@@ -132,7 +124,6 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
      */
     public function isMultyGroups()
     {
-
         if (is_array($this->_groupsListIds) && sizeof($this->_groupsListIds) > 0) {
             return true;
         }
@@ -159,14 +150,12 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
      */
     public function receiverAdd($customerData, $groupId = 0)
     {
-
         $listId = $this->getGroupKey($groupId);
 
         $this->_helper->log("CALL: receiverAdd");
         $this->_helper->log($customerData);
 
         return $this->_client->receiverAdd($this->_apiKey, $listId, $customerData);
-
     }
 
     /**
@@ -206,7 +195,6 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
         $this->_helper->log("CALL: receiverSetActive - Email".$email." | GroupId:". $groupId);
         return $this->_client->receiverSetActive($this->_apiKey, $listId, $email);
     }
-
 
     /**
      * Return request result
@@ -411,10 +399,12 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
 
             // Subscriber customer first
             $addResult = $this->receiverAdd($crReceiver, $groupId);
+            /* @var $httpHelper Mage_Core_Helper_Http */
+            $httpHelper = Mage::helper('core/http');
 
             $doidata = array(
-                "user_ip" => $_SERVER['REMOTE_ADDR'],
-                "user_agent" => $_SERVER['HTTP_USER_AGENT'],
+                "user_ip" => $httpHelper->getRemoteAddr(),
+                "user_agent" => $httpHelper->getHttpUserAgent(),
                 "referer" => Mage::getUrl("/"),
                 "postdata" => "",
                 "info" => "",
@@ -494,10 +484,12 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
                 $tmp["email"] = $subscriber["subscriber_email"];
                 $tmp["source"] = "MAGENTO";
                 // Prepare customer attributes
+                $firstname = isset($subscriber['customer_firstname']) ? $subscriber['customer_firstname'] : null;
+                $lastname  = isset($subscriber['customer_lastname']) ? $subscriber['customer_lastname'] : null;
                 $tmp["attributes"] = array(
-                    0 => array("key" => "firstname", "value" => @$subscriber["customer_firstname"]),
-                    1 => array("key" => "lastname", "value" => @$subscriber["customer_lastname"]),
-                    2 => array("key" => "newsletter", "value" => "1")
+                    array("key" => "firstname",  "value" => $firstname),
+                    array("key" => "lastname",   "value" => $lastname),
+                    array("key" => "newsletter", "value" => 1)
                 );
             }
 
@@ -556,8 +548,8 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
                 $return = $this->setupGroupFields($groupId);
             }
         } catch (Exception $e) {
+            Mage::logException($e);
             return false;
-
         }
         return $return;
     }

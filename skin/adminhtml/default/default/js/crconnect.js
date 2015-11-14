@@ -1,228 +1,202 @@
 Crconnect = Class.create();
 Crconnect.prototype = {
-    initialize: function () {
-
-
+    initialize: function (options, elements) {
+        this.options = options;
+        this.elements = elements;
     },
-    confirmMainKey: function (manual) {
-
-        var key = $("crroot_crconnect_api_key").value;
-
+    confirmMainKey: function (manual) 
+    {
+        var key = $("crroot_crconnect_api_key").value,
+            self = this;
         if (manual) {
             $$(".simple-added-row").each(function (el) {
                 callRowDelete(el.id);
-                savedDefaultListId = false;
-                savedDefaultFormId = false;
+                self.options.savedDefaultListId = false;
+                self.options.savedDefaultFormId = false;
             });
         }
 
         if (key) {
-            var url = baseConfirmKeyUrl + 'key/' + key;
+            var url = this.options.baseConfirmKeyUrl + 'key/' + key;
             new Ajax.Request(url, {
                 method: 'post',
                 onSuccess: function (transport) {
-
                     var select = $('crroot_crconnect_list_id');
-                    Crconnect.cleanSelect('crroot_crconnect_list_id');
-
+                    self.cleanSelect('crroot_crconnect_list_id');
                     // If no results come, revert all group and form selects to default states
                     if (transport.responseText == "empty") {
-                        Crconnect.resetGroupList();
-                        Crconnect.resetFormList();
-                        // Reload block with keys 
-                        Crconnect.reloadKeysBlock();
-                        Crconnect.confirmDisable();
+                        self.resetGroupList();
+                        self.resetFormList();
+                        self.reloadKeysBlock();
+                        self.confirmDisable();
                         return false;
                     }
-
                     // Fill Main groups select with groups list
                     var editData = transport.responseText.evalJSON(true);
-                    Crconnect.reloadKeysBlock(editData);
+                    self.reloadKeysBlock(editData);
                     select.insert(new Element('option', {
                         value: ''
-                    }).update(crconnectLang['please:select:group']));
+                    }).update(Translator.translate('Please select subscribers group')));
                     for (var i = 0; i < editData.length; i++) {
                         select.insert(new Element('option', {
                             value: editData[i].id
                         }).update(editData[i].name));
                     }
 
-                    if (savedDefaultListId) {
-                        select.value = savedDefaultListId;
-                        savedDefaultListId = false;
+                    if (self.options.savedDefaultListId) {
+                        select.value = self.options.savedDefaultListId;
+                        self.options.savedDefaultListId = false;
                     }
-                    Crconnect.changeGroupId();
-
-
+                    self.changeGroupId();
                 }
             });
         } else {
-            Crconnect.resetGroupList();
+            this.resetGroupList();
         }
-        Crconnect.confirmDisable();
-
+        this.confirmDisable();
     },
-    reloadKeysBlock: function (editData) {
-
+    reloadKeysBlock: function (editData) 
+    {
         var select = '<select class="crconnect-groups-select" onchange="Crconnect.changeSubGroup(this)" id="#{_id}_crconnect" name="groups[crconnect][fields][groups_keys][value][#{_id}][crconnect]">';
-        select += '<option value="">' + crconnectLang['please:select:group'] + '</option>';
+        select += '<option value="">' + Translator.translate('Please select subscribers group') + '</option>';
         if (editData) {
             for (var i = 0; i < editData.length; i++) {
                 select += '<option value="' + editData[i].id + '">' + editData[i].name + '</option>';
             }
         }
-        stringElements['crconnect'] = select + '</select>';
+        this.elements.stringElements['crconnect'] = select + '</select>';
         initRowTemplate();
-
     },
-    changeGroupId: function () {
-
+    changeGroupId: function () 
+    {
         var groupId = $("crroot_crconnect_list_id").value;
         var key = $("crroot_crconnect_api_key").value;
-
+        var self = this;
         if (key && groupId) {
-            var url = baseChangeGroupUrl + 'group/' + groupId + '/key/' + key;
+            var url = crconnectOptions.baseChangeGroupUrl + 'group/' + groupId + '/key/' + key;
             new Ajax.Request(url, {
                 method: 'post',
                 onSuccess: function (transport) {
-
                     var select = $('crroot_crconnect_form_id');
-
-                    Crconnect.cleanSelect('crroot_crconnect_form_id');
+                    self.cleanSelect('crroot_crconnect_form_id');
                     if (transport.responseText == "empty") {
-                        Crconnect.resetFormList();
+                        self.resetFormList();
                         return false;
                     }
                     var editData = transport.responseText.evalJSON(true);
                     select.insert(new Element('option', {
                         value: ''
-                    }).update(crconnectLang['please:select:form']));
+                    }).update(Translator.translate('Please select form')));
                     for (var i = 0; i < editData.length; i++) {
                         select.insert(new Element('option', {
                             value: editData[i].id
                         }).update(editData[i].name));
                     }
 
-                    if (savedDefaultFormId) {
-                        select.value = savedDefaultFormId;
-                        savedDefaultFormId = false;
+                    if (self.options.savedDefaultFormId) {
+                        select.value = self.options.savedDefaultFormId;
+                        self.options.savedDefaultFormId = false;
                     }
-
                 }
             });
         } else {
-            Crconnect.resetFormList();
+            this.resetFormList();
         }
     },
-    changeSubGroup: function (element) {
-
-        var selectedValue = element.value;
-        var id = element.id;
-        id = id.replace("_crconnect", "");
-
-        var key = $("crroot_crconnect_api_key").value;
-        var url = baseChangeGroupUrl + 'group/' + selectedValue + '/key/' + key;
-
+    changeSubGroup: function (element) 
+    {
+        var selectedValue = element.value,
+            id = element.id.replace("_crconnect", ""),
+            key = $("crroot_crconnect_api_key").value,
+            url = this.options.baseChangeGroupUrl + 'group/' + selectedValue + '/key/' + key,
+            self = this;
+        
         new Ajax.Request(url, {
             method: 'post',
             onSuccess: function (transport) {
-
                 var select = $(id + '_formid');
-
-                Crconnect.cleanSelect(id + '_formid');
+                self.cleanSelect(id + '_formid');
                 if (transport.responseText == "empty") {
-                    Crconnect.resetFormList(id + '_formid');
+                    self.resetFormList(id + '_formid');
                     return false;
                 }
                 var editData = transport.responseText.evalJSON(true);
                 select.insert(new Element('option', {
                     value: ''
-                }).update(crconnectLang['please:select:form']));
+                }).update(Translator.translate('Please select form')));
                 for (var i = 0; i < editData.length; i++) {
                     select.insert(new Element('option', {
                         value: editData[i].id
                     }).update(editData[i].name));
                 }
 
-                if (savedFormsKeys) {
-
-                    if (savedFormsKeys[id]) {
-                        select.value = savedFormsKeys[id];
+                if (self.options.savedFormsKeys) {
+                    if (self.options.savedFormsKeys[id]) {
+                        select.value = self.options.savedFormsKeys[id];
                     }
-
                 }
             }
         });
     },
-    confirmEnable: function () {
-
+    confirmEnable: function () 
+    {
         $("confirm-key-button").removeClassName('disabled');
         $("confirm-key-button").disabled = false;
-
     },
-    confirmDisable: function () {
-
+    confirmDisable: function () 
+    {
         $("confirm-key-button").addClassName('disabled');
         $("confirm-key-button").disabled = true;
-
     },
-    resetFormList: function (formId) {
-
+    resetFormList: function (formId) 
+    {
         if (!formId) {
             formId = 'crroot_crconnect_form_id';
         }
-        Crconnect.cleanSelect(formId);
+        this.cleanSelect(formId);
         $(formId).insert(new Element('option', {
             value: ''
-        }).update(crconnectLang['please:select:form:default']));
-
+        }).update(Translator.translate('No forms to select')));
     },
-    resetGroupList: function (formId) {
-
+    resetGroupList: function (formId) 
+    {
         if (!formId) {
             formId = 'crroot_crconnect_list_id';
         }
-
-        Crconnect.cleanSelect(formId);
+        this.cleanSelect(formId);
         $(formId).insert(new Element('option', {
             value: ''
-        }).update(crconnectLang['please:select:group:default']));
-
+        }).update(Translator.translate('No groups to select')));
     },
-    cleanSelect: function (selectId) {
-
+    cleanSelect: function (selectId) 
+    {
         var options = $$('select#' + selectId + ' option');
-        var select = $(selectId);
         for (var i = 0; i < options.length; i++) {
             options[i].remove();
         }
-
     },
-    fillSelectedGroups: function () {
-
-        if (typeof editedSelects != "undefined") {
-            if (editedSelects.length > 0) {
-                for (var i = 0; i < editedSelects.length; i++) {
-                    Crconnect.changeSubGroup($(editedSelects[i] + "_crconnect"));
+    fillSelectedGroups: function () 
+    {
+        if (typeof this.elements.editedSelects != "undefined") {
+            if (this.elements.editedSelects.length > 0) {
+                for (var i = 0; i < this.elements.editedSelects.length; i++) {
+                    this.changeSubGroup($(this.elements.editedSelects[i] + "_crconnect"));
                 }
             }
         }
-
     }
+};
 
-}
-Crconnect = new Crconnect();
-
-function initCleverReach() {
-
+function initCleverReach() 
+{
     try {
+        Crconnect = new Crconnect(crconnectOptions, crconnectElements);
         Crconnect.confirmMainKey();
         Event.observe('crroot_crconnect_list_id', 'change', Crconnect.changeGroupId);
         Event.observe('crroot_crconnect_api_key', 'keyup', Crconnect.confirmEnable);
         Crconnect.fillSelectedGroups();
     } catch (e) {
-
+        console.log(e);
     }
-
 }
 Event.observe(window, 'load', initCleverReach);

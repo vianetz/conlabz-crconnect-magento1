@@ -20,7 +20,7 @@
                 <template>crconnect/customer/account/dashboard/info.phtml</template>
             </action>
         </reference>
-        
+
     </customer_account_index>
-    
+
 </layout>

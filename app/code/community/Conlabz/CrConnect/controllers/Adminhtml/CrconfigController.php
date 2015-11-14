@@ -37,7 +37,7 @@ class Conlabz_Crconnect_Adminhtml_CrconfigController extends Mage_Adminhtml_Cont
     {
         $this->getResponse()->setBody(
             $this->getLayout()
-                ->createBlock('crconnect/config_groupsapis')
+                ->createBlock('crconnect/config_groupsApis')
                 ->toHtml()
         );
     }

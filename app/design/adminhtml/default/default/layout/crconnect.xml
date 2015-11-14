@@ -8,7 +8,7 @@
             </action>
         </reference>
         <reference name="before_body_end">
-            <block type="core/template" name="crconnect_header" template="crconnect/config/header.phtml" />
+            <block type="adminhtml/template" name="crconnect.config" template="crconnect/config.phtml" />
         </reference>
     </adminhtml_system_config_edit>
 </layout>
