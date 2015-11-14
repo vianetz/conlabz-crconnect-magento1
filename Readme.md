@@ -1,9 +1,10 @@
 # CleverReach Connect
 
 master: [![Build Status](https://travis-ci.org/conlabz/Conlabz_CrConnect.svg?branch=master)](https://travis-ci.org/conlabz/Conlabz_CrConnect)
+
 develop: [![Build Status](https://travis-ci.org/conlabz/Conlabz_CrConnect.svg?branch=develop)](https://travis-ci.org/conlabz/Conlabz_CrConnect)
 
-## CleverReach Connect extension offers synchronization of your Magento newsletter subscribers and customers (imported from your orders if you like) with the CleverReach subscription groups.
+CleverReach Connect extension offers synchronization of your Magento newsletter subscribers and customers (imported from your orders if you like) with the CleverReach subscription groups.
 
 CleverReach email marketing tool (http://www.cleverreach.de) allows you to create professional emails online, dispatch them reliably, track their success and manage receivers. 
 
