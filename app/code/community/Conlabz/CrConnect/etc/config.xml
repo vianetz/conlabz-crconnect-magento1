@@ -171,4 +171,11 @@
             </updates>
         </layout>
     </frontend>
+    <phpunit>
+        <suite>
+            <modules>
+                <Conlabz_CrConnect />
+            </modules>
+        </suite>
+    </phpunit>
 </config>
