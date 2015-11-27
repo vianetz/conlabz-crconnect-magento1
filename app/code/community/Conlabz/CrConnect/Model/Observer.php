@@ -189,7 +189,7 @@ class Conlabz_CrConnect_Model_Observer
             }
         } catch (Exception $ex) {
             Mage::helper("crconnect")->log("order_save_after Exception");
-            Mage::helper("crconnect")->log($ex);
+            Mage::helper("crconnect")->log($ex->getMessage());
         }
         return true;
     }
