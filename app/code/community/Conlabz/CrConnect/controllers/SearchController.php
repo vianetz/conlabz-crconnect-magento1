@@ -16,6 +16,9 @@ class Conlabz_CrConnect_SearchController extends Mage_Core_Controller_Front_Acti
             exit;
         }
 
+        // make sure to set the correct store, so that correct categories and products are used
+        Mage::app()->setCurrentStore($store);
+
         $search = Mage::getModel('crconnect/search');
         $action = $this->getRequest()->getParam('get');
         $returnData = array();
