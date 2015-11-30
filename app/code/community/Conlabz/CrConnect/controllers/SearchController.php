@@ -17,7 +17,7 @@ class Conlabz_CrConnect_SearchController extends Mage_Core_Controller_Front_Acti
         }
 
         $search = Mage::getModel('crconnect/search');
-        $action = $this->getRequest()->getParam('get');
+        $action = $this->getRequest()->getParam('get', 'filter');
         $returnData = array();
         switch ($action) {
             case 'filter':
