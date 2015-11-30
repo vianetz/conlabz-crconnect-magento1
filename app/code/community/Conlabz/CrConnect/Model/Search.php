@@ -46,6 +46,7 @@ class Conlabz_CrConnect_Model_Search
      */
     public function getCategories($categories)
     {
+        $array = [];
         foreach ($categories as $category) {
             $prefix = "";
             for ($i = 0; $i < $category->getLevel() - 2; $i++) {
