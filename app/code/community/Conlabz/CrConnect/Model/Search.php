@@ -54,7 +54,7 @@ class Conlabz_CrConnect_Model_Search
             }
             $array[] = array("text" => $prefix . $category->getName(), "value" => $category->getId()); //In this line we get an a link for the product and product count of that category
             if ($category->hasChildren()) {
-                $children = Mage::getModel('catalog/category')->getCategories($category->getId()); // $children get a list of all subcategories
+                $children = $category->getChildrenCategories(); // $children get a list of all subcategories
                 $array = array_merge($array, $this->getCategories($children)); //recursive call the get_categories function again.
             }
         }
