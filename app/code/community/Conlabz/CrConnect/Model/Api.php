@@ -35,6 +35,8 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
     public function getSoapClient()
     {
         try {
+            // @TODO: make timeout editable through backend
+            ini_set("default_socket_timeout", 300);
             $client = new SoapClient($this->_helper->getWsdl(), array("trace" => true, "exception" => 0));
             return $client;
         } catch (Exception $e) {
