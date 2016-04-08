@@ -222,7 +222,7 @@ class Conlabz_CrConnect_Model_Observer
     {
         $session = Mage::getSingleton('adminhtml/session');
 
-        $setupResult = Mage::getModel('crconnect/api')->setupDefaultClereReachList();
+        $setupResult = Mage::getModel('crconnect/api')->setupDefaultCleverReachList();
         if (!$setupResult) {
             $session->addError("Could not connect to CleverReach. Please check your API keys.");
         } elseif ($setupResult->status == "ERROR" && $setupResult->statuscode != 50) {

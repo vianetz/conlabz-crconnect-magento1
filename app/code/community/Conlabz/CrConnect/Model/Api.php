@@ -534,7 +534,7 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
         return $syncedUsers;
     }
 
-    public function setupDefaultClereReachList()
+    public function setupDefaultCleverReachList()
     {
         //Check if we connected to Cr account
         if (!$this->isConnected()) {
