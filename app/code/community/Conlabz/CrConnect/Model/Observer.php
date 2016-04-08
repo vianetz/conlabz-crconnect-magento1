@@ -4,9 +4,6 @@ class Conlabz_CrConnect_Model_Observer
     // 14 days
     const SESSION_LIFE = 1209600;
 
-    private $_allowedControllers = array("account");
-    private $_allowedActions = array("createpost");
-
     public function customerSaveAfter($observer)
     {
         if (!Mage::registry('cr_aftersave_called')) {
@@ -41,13 +38,6 @@ class Conlabz_CrConnect_Model_Observer
                 }
             }
 
-        } else {
-            if (in_array($controller, $this->_allowedControllers) && in_array($action, $this->_allowedActions)) {
-                if ($subscriber->isSubscribed()) {
-                     $status = Mage::getModel("crconnect/subscriber")->unsubscribe($email);
-                     Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper("core")->__('The subscription has been removed.'));
-                }
-            }
         }
 
         $gsubscription = Mage::app()->getRequest()->getParam('gsubscription');
@@ -62,14 +52,8 @@ class Conlabz_CrConnect_Model_Observer
                     Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper("core")->__('Thank you for your subscription.'));
                 }
             }
-        } else {
-            if (in_array($controller, $this->_allowedControllers) && in_array($action, $this->_allowedActions)) {
-                if ($subscriber->isSubscribed($groupId)) {
-                    $status = Mage::getModel("crconnect/subscriber")->unsubscribe($email, $groupId);
-                    Mage::getSingleton('adminhtml/session')->addSuccess(Mage::helper("core")->__('The subscription has been removed.'));
-                }
-            }
         }
+
         return true;
     }
 
