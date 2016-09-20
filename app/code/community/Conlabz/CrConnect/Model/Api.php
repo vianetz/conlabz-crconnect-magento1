@@ -221,6 +221,7 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
     public function clientGetDetails()
     {
         $result = $this->_client->clientGetDetails($this->_apiKey);
+        $this->_helper->log($result->message);
         if ($result->status == self::SUCCESS_STATUS) {
             return $this->returnResult($result->data);
         } else {
@@ -319,15 +320,17 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
     public function receiverAddOrder($email, $orderInfo)
     {
         $listId = $this->_helper->getDefaultListId();
-        $result = $this->_client->receiverAddOrder($this->_apiKey, $listId, $email, $orderInfo);
-        Mage::helper("crconnect")->log("CALL receiverAddOrder: ".$email);
-        Mage::helper("crconnect")->log($orderInfo);
-        Mage::helper("crconnect")->log($result);
-        if ($result->status == self::SUCCESS_STATUS) {
-            return true;
-        } else {
-            return false;
-        }
+
+        $result = $this->_client->receiverUpdate($this->_apiKey, $listId, array(
+            "email" => $email,
+            "orders" => $orderInfo
+        ));
+
+        $this->_helper->log("CALL receiverAddOrder: ".$email);
+        $this->_helper->log($orderInfo);
+        $this->_helper->log($result);
+
+        return ($result->status === self::SUCCESS_STATUS);
     }
 
     /**
@@ -464,6 +467,8 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
         $this->_helper->log("RUN SYNCHRONIZATION");
 
         $subscribers = $this->_helper->getActiveMageSubscribers();
+        $crSubscribers = $this->getActiveCrSubscribers();
+
         $syncedUsers = 0;
         $batch = array();
         $i = 0;
@@ -500,6 +505,44 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
             if ($tmp["email"]) {
                 $batch[$subscriber["store_id"]][$userGroup][floor($i++ / 25)][] = $tmp; //max 25 per batch
             }
+        }
+
+        foreach ($crSubscribers as $subscriber) {
+            $userGroup = 0;
+            // If we should separate customers to different groups, then get customer Groups iD if exists
+            if ($this->_helper->isSeparationEnabled()) {
+                if ($subscriber["email"]) {
+
+
+                    $groups = array($this->_helper->getDefaultListId()) + $this->_helper->getGroupsIds();
+
+                    // get customer by subscriber E-mail
+                    $systemCustomer = Mage::getModel("customer/customer")->setWebsiteId($subscriber['website_id'])->loadByEmail($subscriber["email"]);
+                    if ($systemCustomer->getId()) {
+                        $userGroup = $systemCustomer->getGroupId();
+                    }
+                }
+            }
+
+            /*if (isset($subscriber['customer_id']) && $subscriber['customer_id']) {
+                $tmp = $this->_helper->prepareUserdata(Mage::getModel("customer/customer")->load($subscriber['customer_id']));
+            } else {
+                $tmp["email"] = $subscriber["email"];
+                $tmp["source"] = "MAGENTO";
+                // Prepare customer attributes
+                $firstname = isset($subscriber['customer_firstname']) ? $subscriber['customer_firstname'] : null;
+                $lastname  = isset($subscriber['customer_lastname']) ? $subscriber['customer_lastname'] : null;
+                $tmp["attributes"] = array(
+                    array("key" => "firstname",  "value" => $firstname),
+                    array("key" => "lastname",   "value" => $lastname),
+                    array("key" => "newsletter", "value" => 1)
+                );
+            }
+
+            // Separate users by Batch, 25 users in one
+            if ($tmp["email"]) {
+                $batch[$subscriber["store_id"]][$userGroup][floor($i++ / 25)][] = $tmp; //max 25 per batch
+            }*/
         }
 
         try {
@@ -600,4 +643,26 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
         return $return;
 
     }
+
+    private function getActiveCrSubscribers() {
+        $subscribers = [];
+        $groups = array($this->_helper->getDefaultListId()) + $this->_helper->getGroupsIds();
+
+        foreach ($groups as $group) {
+            $page = 0;
+            do {
+                $return = $this->_client->receiverGetPage($this->_apiKey, $group, [
+                    "page" => $page++,
+                    "filter" => "active"
+                ]);
+
+                if ($return->status === self::SUCCESS_STATUS) {
+                    $subscribers += $return->data;
+                }
+
+            } while($return->data);
+        }
+        return $subscribers;
+    }
+
 }
