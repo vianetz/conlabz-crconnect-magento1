@@ -350,7 +350,7 @@ class Conlabz_CrConnect_Helper_Data extends Mage_Core_Helper_Abstract
         if ($this->isTrackingEnabled()) {
             $crReceiver['orders'] = array();
 
-            $orders = Mage::getModel('sales/order')->getCollection()->addFieldToSelect('order_id')->addFieldToFilter('customer_email', $newEmail);
+            $orders = Mage::getModel('sales/order')->getCollection()->addFieldToSelect(array('entity_id', 'increment_id'))->addFieldToFilter('customer_email', $newEmail);
             foreach ($orders as $order)
             {
                 $items = $order->getAllVisibleItems();

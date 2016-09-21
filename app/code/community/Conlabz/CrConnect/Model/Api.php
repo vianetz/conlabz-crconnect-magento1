@@ -472,41 +472,41 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
         $batch = array();
         $i = 0;
 
-        foreach ($subscribers as $subscriber) {
-            $userGroup = 0;
-            // If we should separate customers to different groups, then get customer Groups iD if exists
-            if ($this->_helper->isSeparationEnabled()) {
-                if ($subscriber["subscriber_email"]) {
-                    // get customer by subscriber E-mail
-                    $systemCustomer = Mage::getModel("customer/customer")->setWebsiteId($subscriber['website_id'])->loadByEmail($subscriber["subscriber_email"]);
-                    if ($systemCustomer->getId()) {
-                        $userGroup = $systemCustomer->getGroupId();
+        try {
+            foreach ($subscribers as $subscriber) {
+                $userGroup = 0;
+                // If we should separate customers to different groups, then get customer Groups iD if exists
+                if ($this->_helper->isSeparationEnabled()) {
+                    if ($subscriber["subscriber_email"]) {
+                        // get customer by subscriber E-mail
+                        $systemCustomer = Mage::getModel("customer/customer")->setWebsiteId($subscriber['website_id'])->loadByEmail($subscriber["subscriber_email"]);
+                        if ($systemCustomer->getId()) {
+                            $userGroup = $systemCustomer->getGroupId();
+                        }
                     }
+                }
+
+                if (isset($subscriber['customer_id']) && $subscriber['customer_id']) {
+                    $tmp = $this->_helper->prepareUserdata(Mage::getModel("customer/customer")->load($subscriber['customer_id']));
+                } else {
+                    $tmp["email"] = $subscriber["subscriber_email"];
+                    $tmp["source"] = "MAGENTO";
+                    // Prepare customer attributes
+                    $firstname = isset($subscriber['customer_firstname']) ? $subscriber['customer_firstname'] : null;
+                    $lastname  = isset($subscriber['customer_lastname']) ? $subscriber['customer_lastname'] : null;
+                    $tmp["attributes"] = array(
+                        array("key" => "firstname",  "value" => $firstname),
+                        array("key" => "lastname",   "value" => $lastname),
+                        array("key" => "newsletter", "value" => 1)
+                    );
+                }
+
+                // Separate users by Batch, 25 users in one
+                if ($tmp["email"]) {
+                    $batch[$subscriber["store_id"]][$userGroup][floor($i++ / 25)][] = $tmp; //max 25 per batch
                 }
             }
 
-            if (isset($subscriber['customer_id']) && $subscriber['customer_id']) {
-                $tmp = $this->_helper->prepareUserdata(Mage::getModel("customer/customer")->load($subscriber['customer_id']));
-            } else {
-                $tmp["email"] = $subscriber["subscriber_email"];
-                $tmp["source"] = "MAGENTO";
-                // Prepare customer attributes
-                $firstname = isset($subscriber['customer_firstname']) ? $subscriber['customer_firstname'] : null;
-                $lastname  = isset($subscriber['customer_lastname']) ? $subscriber['customer_lastname'] : null;
-                $tmp["attributes"] = array(
-                    array("key" => "firstname",  "value" => $firstname),
-                    array("key" => "lastname",   "value" => $lastname),
-                    array("key" => "newsletter", "value" => 1)
-                );
-            }
-
-            // Separate users by Batch, 25 users in one
-            if ($tmp["email"]) {
-                $batch[$subscriber["store_id"]][$userGroup][floor($i++ / 25)][] = $tmp; //max 25 per batch
-            }
-        }
-
-        try {
             // send subscribers batch to CleverReach
             if ($batch) {
                 foreach ($batch as $storeId => $groupBatch) {
