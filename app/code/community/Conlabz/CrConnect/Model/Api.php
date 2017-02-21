@@ -598,6 +598,11 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
                 unset($fields[$a->key]);
             }
         }
+
+        if (empty($fields)) {
+            return true;
+        }
+
         foreach ($fields as $field) {
             $return = $this->_client->groupAttributeAdd($this->_apiKey, $listId, $field, "text", "");
         }

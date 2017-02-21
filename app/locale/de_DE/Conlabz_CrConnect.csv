@@ -42,6 +42,8 @@
 "Synchronize data with CleverReach","Daten mit CleverReach synchronisieren"
 "Warning: Please wait untill the synchronization is finished. Depending on the amount of data this might take a while.","Warnung: Bitte warten Sie bis die Synchronisierung abgeschlossen ist. Je nach Datenmenge, kann dies einige Minuten dauern."
 "Connection to Cleverreach Server failed","Verbindung mir dem CleverReach-Sever fehlgeschlagen"
+"Could not connect to or receive any data from CleverReach. Please check your API key, selected group(s) and form(s).", "Eine Verbindung zu CleverReach konnte nicht aufgebaut werden. Bitte prüfen Sie Ihren API-Schlüssel, die Abonnenten-Liste und Formulare."
+"Double Opt-In is enabled, please select form(s) and group(s) for your customer groups.","Das Double-Opt-In-Verfahren ist aktiv. Bitten wählen Sie eine Abonnenten-Liste und das entsprechende Formular."
 "Your API key seems to be invalid. Please check it!","Ihr API Schlüssel scheint ungültig zu sein. Bitte überprüfen Sie ihn."
 "Your list ID (%s) seem to be wrong. Please correct it!","Ihre Listen ID (%s) scheint falsch zu sein. Bitte berichtigen Sie die ID."
 "Can not connect to CleverReach account. Please check your Cleverreach settings.","Verbindung zum CleverReach-Account nicht möglich. Bitte prüfen sie Ihre CleverReach Einstellungen."
