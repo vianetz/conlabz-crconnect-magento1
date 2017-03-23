@@ -117,6 +117,15 @@ class Conlabz_CrConnect_Model_Observer
         }
     }
 
+    public function checkoutSubscription(Varien_Event_Observer $observer)
+    {
+        //$event = $observer->getEvent();
+        $request = Mage::app()->getRequest();
+        /** @var $subscriber Conlabz_CrConnect_Model_Subscriber */
+        $subscriber = Mage::getModel("crconnect/subscriber");
+        $subscriber->updateSubscription($request);
+    }
+
     public function orderPlacedAfter($observer)
     {
         try {
