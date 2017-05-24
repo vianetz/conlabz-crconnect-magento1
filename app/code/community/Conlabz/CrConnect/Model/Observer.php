@@ -161,7 +161,7 @@ class Conlabz_CrConnect_Model_Observer
                             'attributes' => array(
                                 array("key" => "firstname", "value" => $billingAddress->getFirstname()),
                                 array("key" => "lastname", "value" => $billingAddress->getLastname()),
-                                array("key" => "street", "value" => $billingAddress->getStreet()),
+                                array("key" => "street", "value" => $billingAddress->getStreetFull()),
                                 array("key" => "zip", "value" => $billingAddress->getPostcode()),
                                 array("key" => "city", "value" => $billingAddress->getCity()),
                                 array("key" => "country", "value" => $billingAddress->getCountryId()),
