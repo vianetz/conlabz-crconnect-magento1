@@ -130,6 +130,8 @@ class Conlabz_CrConnect_Model_Observer
     {
         try {
             $order = $observer->getOrder();
+            $request = Mage::app()->getRequest();
+
             if (Mage::helper("crconnect")->isM2eExclude()) {
                 $shippingMethod = $order->getShippingMethod();
                 Mage::helper("crconnect")->log("M2E sync disabled -> shipping method: " . $shippingMethod);
@@ -139,8 +141,11 @@ class Conlabz_CrConnect_Model_Observer
                 }
             }
 
-            $customer = Mage::getModel('customer/customer')->load($order->getCustomerId());
+            //$customer = Mage::getModel('customer/customer')->load($order->getCustomerId());
             $email = $order->getCustomerEmail();
+            $customer = Mage::getModel('customer/customer')
+                ->setWebsiteId(Mage::app()->getStore()->getWebsiteId())
+                ->loadByEmail($email);
 
             if (Mage::helper("crconnect")->isForceSyncEnabled()) {
                 Mage::helper("crconnect")->log("Force sync orders enabled");
@@ -158,6 +163,7 @@ class Conlabz_CrConnect_Model_Observer
                         $crReceiver = array (
                             'email' => $email,
                             'source' => 'MAGENTO',
+                            'deactivated' => 1,
                             'attributes' => array(
                                 array("key" => "firstname", "value" => $billingAddress->getFirstname()),
                                 array("key" => "lastname", "value" => $billingAddress->getLastname()),
@@ -170,6 +176,9 @@ class Conlabz_CrConnect_Model_Observer
                                 array("key" => "company", "value" => $billingAddress->getCompany())
                             )
                         );
+                        if ((boolean) $request->getParam('is_subscribed', false)) {
+                            $crReceiver['deactivated'] = 0;
+                        }
 
                         $cookie = Mage::getSingleton('core/cookie');
                         if ($cookie->get('crmailing')) {
@@ -177,9 +186,9 @@ class Conlabz_CrConnect_Model_Observer
                         }
                         Mage::helper("crconnect")->log($crReceiver);
 
-                        $result = Mage::getModel("crconnect/api")->receiverAdd($crReceiver);
+                        $result = Mage::getModel("crconnect/api")->receiverUpdate($crReceiver);
                         if ($result->status !== 'SUCCESS') {
-                            $result = Mage::getModel("crconnect/api")->receiverUpdate($crReceiver);
+                            $result = Mage::getModel("crconnect/api")->receiverAdd($crReceiver);
                         }
                         Mage::helper("crconnect")->log($result);
                     }
