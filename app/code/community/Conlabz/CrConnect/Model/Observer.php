@@ -91,7 +91,7 @@ class Conlabz_CrConnect_Model_Observer
         $order = Mage::getModel('sales/order')->load($lastOrderId);
         $email = $order->getCustomerEmail();
 
-        if (Mage::helper("crconnect")->isTrackingEnabled()) {
+        if (Mage::helper("crconnect")->isTrackingEnabled() && (Mage::helper("crconnect")->isForceSyncEnabled() || Mage::getModel('crconnect/api')->isSubscribed($email))) {
             $items = $order->getAllItems();
             if ($items) {
                 $tmpItems = array();
@@ -102,7 +102,7 @@ class Conlabz_CrConnect_Model_Observer
                     $tmpItem["product_id"] = $item->getProductId();
                     $tmpItem["price"] = round($item->getPrice(), 2);
                     $tmpItem["quantity"] = (integer)$item->getQtyOrdered();
-                    $tmpItem["purchase_date"] = time();
+                    $tmpItem["purchase_date"] = strtotime($item->getCreatedAt());
                     $tmpItem["currency"] = $order->getData('order_currency_code');
                     $tmpItem["source"] = "MAGENTO Order";
 
@@ -141,13 +141,15 @@ class Conlabz_CrConnect_Model_Observer
                 }
             }
 
+            $subscribe = (boolean) $request->getParam('is_subscribed', false);
+
             //$customer = Mage::getModel('customer/customer')->load($order->getCustomerId());
             $email = $order->getCustomerEmail();
             $customer = Mage::getModel('customer/customer')
                 ->setWebsiteId(Mage::app()->getStore()->getWebsiteId())
                 ->loadByEmail($email);
 
-            if (Mage::helper("crconnect")->isForceSyncEnabled()) {
+            if (Mage::helper("crconnect")->isForceSyncEnabled() && (Mage::getModel('crconnect/api')->isSubscribed($email) || $subscribe)) {
                 Mage::helper("crconnect")->log("Force sync orders enabled");
 
                 if ($customer->getEmail()) {
@@ -176,7 +178,7 @@ class Conlabz_CrConnect_Model_Observer
                                 array("key" => "company", "value" => $billingAddress->getCompany())
                             )
                         );
-                        if ((boolean) $request->getParam('is_subscribed', false)) {
+                        if ($subscribe) {
                             $crReceiver['deactivated'] = 0;
                         }
 
@@ -186,9 +188,9 @@ class Conlabz_CrConnect_Model_Observer
                         }
                         Mage::helper("crconnect")->log($crReceiver);
 
-                        $result = Mage::getModel("crconnect/api")->receiverUpdate($crReceiver);
+                        $result = Mage::getModel("crconnect/api")->receiverUpdate($crReceiver, $customer->getGroupId());
                         if ($result->status !== 'SUCCESS') {
-                            $result = Mage::getModel("crconnect/api")->receiverAdd($crReceiver);
+                            $result = Mage::getModel("crconnect/api")->receiverAdd($crReceiver, $customer->getGroupId());
                         }
                         Mage::helper("crconnect")->log($result);
                     }
