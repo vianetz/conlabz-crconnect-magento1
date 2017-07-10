@@ -121,9 +121,13 @@ class Conlabz_CrConnect_Model_Observer
     {
         //$event = $observer->getEvent();
         $request = Mage::app()->getRequest();
-        /** @var $subscriber Conlabz_CrConnect_Model_Subscriber */
-        $subscriber = Mage::getModel("crconnect/subscriber");
-        $subscriber->updateSubscription($request);
+        $email = $observer->getOrder()->getCustomerEmail();
+
+        if ((boolean) $request->getParam('is_subscribed', false)) {
+            /** @var $subscriber Conlabz_CrConnect_Model_Subscriber */
+            $subscriber = Mage::getModel("crconnect/subscriber");
+            $subscriber->updateSubscription($email, $request);
+        }
     }
 
     public function orderPlacedAfter($observer)
@@ -142,6 +146,7 @@ class Conlabz_CrConnect_Model_Observer
             }
 
             $subscribe = (boolean) $request->getParam('is_subscribed', false);
+            $crReceiver = NULL;
 
             //$customer = Mage::getModel('customer/customer')->load($order->getCustomerId());
             $email = $order->getCustomerEmail();
@@ -154,9 +159,7 @@ class Conlabz_CrConnect_Model_Observer
 
                 if ($customer->getEmail()) {
                     Mage::helper("crconnect")->log("Force sync orders for logged in customer");
-                    $crReceiver = Mage::helper('crconnect')->prepareUserdata($customer);
-                    $result = Mage::getModel("crconnect/api")->receiverAdd($crReceiver, $customer->getGroupId());
-                    Mage::helper("crconnect")->log($result);
+                    $crReceiver = Mage::helper('crconnect')->prepareUserdata($customer, FALSE, (bool)(int)Mage::helper("crconnect")->isDoubleOptInEnabled());
                 } else {
                     Mage::helper("crconnect")->log("Force sync orders for guest customer");
                     $billingAddress = $order->getBillingAddress();
@@ -187,13 +190,15 @@ class Conlabz_CrConnect_Model_Observer
                             $crReceiver['orders'][0]['mailings_id'] = $cookie->get('crmailing');
                         }
                         Mage::helper("crconnect")->log($crReceiver);
-
-                        $result = Mage::getModel("crconnect/api")->receiverUpdate($crReceiver, $customer->getGroupId());
-                        if ($result->status !== 'SUCCESS') {
-                            $result = Mage::getModel("crconnect/api")->receiverAdd($crReceiver, $customer->getGroupId());
-                        }
-                        Mage::helper("crconnect")->log($result);
                     }
+                }
+
+                if ($crReceiver !== NULL) {
+                    $result = Mage::getModel("crconnect/api")->receiverUpdate($crReceiver, $customer->getGroupId());
+                    if ($result->status !== 'SUCCESS') {
+                        $result = Mage::getModel("crconnect/api")->receiverAdd($crReceiver, $customer->getGroupId());
+                    }
+                    Mage::helper("crconnect")->log($result);
                 }
             }
         } catch (Exception $ex) {

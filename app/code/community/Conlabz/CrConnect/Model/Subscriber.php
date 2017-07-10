@@ -31,10 +31,9 @@ class Conlabz_CrConnect_Model_Subscriber extends Mage_Core_Model_Abstract
         return Mage::getModel("crconnect/api")->update($customer, $groupId);
     }
 
-    public function updateSubscription(Mage_Core_Controller_Request_Http $request)
+    public function updateSubscription($email, Mage_Core_Controller_Request_Http $request)
     {
         try {
-            $email = Mage::getSingleton('customer/session')->getCustomer()->getEmail();
             $subscriber = Mage::getModel("newsletter/subscriber")->loadByEmail($email);
             $subscriber->setEmail(Mage::getSingleton('customer/session')->getCustomer()->getEmail());
 

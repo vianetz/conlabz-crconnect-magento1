@@ -322,12 +322,14 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
     {
         $listId = $this->_helper->getDefaultListId();
 
-        $result = $this->_client->receiverUpdate($this->_apiKey, $listId, array(
+        $info = array(
             "email"       => $email,
             'deactivated' => (int)( !(boolean) $this->isSubscribed($email)),
             'source'      => 'MAGENTO',
             "orders"      => $orderInfo
-        ));
+        );
+
+        $result = $this->_client->receiverUpdate($this->_apiKey, $listId, $info);
 
         $this->_helper->log("CALL receiverAddOrder: ".$email);
         $this->_helper->log($orderInfo);
