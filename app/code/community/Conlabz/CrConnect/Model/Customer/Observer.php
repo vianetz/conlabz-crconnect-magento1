@@ -18,20 +18,10 @@
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
 
-class SubscriberCustomField
-{
-    function SubscriberCustomField($k, $v)
-    {
-        $this->Key = $k;
-        $this->Value = $v;
-    }
-}
-
 class Conlabz_CrConnect_Model_Customer_Observer
 {
     public function session_init($observer)
     {
-        
         $mailingId = Mage::getSingleton('core/app')->getRequest()->getParam('crmailing');
         $cookie = Mage::getSingleton('core/cookie');
         if ($mailingId) {
@@ -42,45 +32,43 @@ class Conlabz_CrConnect_Model_Customer_Observer
         if ($customerId) {
             $cookie->set('crcustomer', $customerId, time()+3600*24*14, '/');
         }
-    
     }
-    
+
     public function check_subscription_status($observer)
     {
-
         $event = $observer->getEvent();
+        $request = Mage::app()->getRequest();
         $customer = $event->getCustomer();
 
         $apiKey = trim(Mage::getStoreConfig('crroot/crconnect/api_key'));
         $listID = trim(Mage::getStoreConfig('crroot/crconnect/list_id'));
-       
+
         $name = $customer->getFirstname() . " " . $customer->getLastname();
         $newEmail = $customer->getEmail();
         $subscribed = $customer->getIsSubscribed();
-        
+
         $groupId = Mage::getSingleton('customer/session')->getCustomerGroupId();
-        
+
         $shippingAddress = false;
         if ($tmp = $customer->getDefaultBillingAddress()) {
             $shippingAddress = $tmp->getData();
         }
-        
-        
+
         try {
             $client = new SoapClient(Mage::helper('crconnect')->getWsdl(), array("trace" => true));
         } catch (Exception $e) {
             Mage::log("CleverReach_CrConnect: Error connecting to CleverReach server: ".$e->getMessage());
         }
-            
+
         $keys = Mage::helper('crconnect')->getKeys();
 
         $isCustomSubscribed = false;
         if (isset($keys[$groupId])) {
             $isCustomSubscribed = Mage::helper('crconnect')->getSubscriber($newEmail, $groupId);
         }
-        
+
         if ($isCustomSubscribed) {
-            if (isset($_POST['is_gsubscribed']) && $_POST['is_gsubscribed'] == 1) {
+            if ($request->getParam('is_subscribed', false)) {
             } else {
                 try {
                     $return = $client->receiverSetInactive($apiKey, $keys[$groupId], $newEmail);
@@ -91,7 +79,7 @@ class Conlabz_CrConnect_Model_Customer_Observer
                 }
             }
         } else {
-            if (isset($_POST['is_gsubscribed']) && $_POST['is_gsubscribed'] == 1) {
+            if ($request->getParam('is_subscribed', false)) {
                 $crReceiver = Mage::helper('crconnect')->prepareUserdata($customer, array('newsletter'=>1), true);
                 $return = $client->receiverAdd($apiKey, $keys[$groupId], $crReceiver);
                 if ($return->status == "ERROR") {
@@ -104,7 +92,6 @@ class Conlabz_CrConnect_Model_Customer_Observer
                         }
                     }
                 }
-        
             }
         }
 
@@ -116,7 +103,7 @@ class Conlabz_CrConnect_Model_Customer_Observer
         if ($subscribed === null) {
             $subscribed = Mage::getModel('newsletter/subscriber')->loadByCustomer($customer)->isSubscribed();
         }
-        
+
         if ($apiKey and $listID) {
             if ($subscribed) {
                 $crReceiver = Mage::helper('crconnect')->prepareUserdata($customer, array('newsletter'=>1), true);
@@ -157,7 +144,7 @@ class Conlabz_CrConnect_Model_Customer_Observer
                     $return = $client->receiverSetInactive($apiKey, $listID, $crReceiver["email"]);
                     if ($return->status=="SUCCESS") {
                         Mage::log("CleverReach_CrConnect: unsubscribed - ".$crReceiver["email"]);
-                        
+
                         if ($return->status == "SUCCESS") {
                             Mage::log("CleverReach_CrConnect: updating newsletterflag");
                             $client->receiverUpdate($apiKey, $listID, $crReceiver);
@@ -174,13 +161,13 @@ class Conlabz_CrConnect_Model_Customer_Observer
 
     public function customer_deleted($observer)
     {
-    
+
         $event = $observer->getEvent();
         $customer = $event->getCustomer();
 
         $apiKey = trim(Mage::getStoreConfig('newsletter/crconnect/api_key'));
         $listID = trim(Mage::getStoreConfig('newsletter/crconnect/list_id'));
-       
+
         $email = $customer->getEmail();
 
         $keys = Mage::helper('crconnect')->getKeys();
@@ -189,14 +176,14 @@ class Conlabz_CrConnect_Model_Customer_Observer
         if (isset($keys[$customer->getGroupId()])) {
             $isCustomSubscribed = Mage::helper('crconnect')->getSubscriber($email, $customer->getGroupId());
         }
-        
+
         if ($apiKey and $listID) {
             try {
                 $client = new SoapClient(Mage::helper('crconnect')->getWsdl(), array("trace" => true));
             } catch (Exception $e) {
                 Mage::log("CleverReach_CrConnect: Error connecting to server: ".$e->getMessage());
             }
-            
+
             Mage::log("CleverReach_CrConnect: Customer deleted, unsubscribing: $email");
             try {
                 $return = $client->receiverDelete($apiKey, $listID, $email);
@@ -205,7 +192,7 @@ class Conlabz_CrConnect_Model_Customer_Observer
                 } else {                                          //call failed
                     Mage::log("CleverReach_CrConnect: error - ".$return["message"]);
                 }
-                
+
                 if ($isCustomSubscribed) {
                     $return = $client->receiverDelete($apiKey, $keys[$groupId], $email);
                     if ($return->status=="SUCCESS") {
@@ -214,14 +201,13 @@ class Conlabz_CrConnect_Model_Customer_Observer
                         Mage::log("CleverReach_CrConnect: error - ".$return["message"]);
                     }
                 }
-                
+
             } catch (Exception $e) {
                 Mage::log("CleverReach_CrConnect: Error in SOAP call: ".$e->getMessage());
             }
         }
     }
-    
-    
+
     public function getIsSubscribed($observer)
     {
          Mage::log("CleverReach_CrConnect: stat");
