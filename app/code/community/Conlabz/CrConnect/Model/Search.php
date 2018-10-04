@@ -5,7 +5,7 @@ class Conlabz_CrConnect_Model_Search
     /**
      * Get Search Filters values
      */
-    public function getFilter()
+    public function getFilter($store = null)
     {
         $filter = array();
 
@@ -18,7 +18,7 @@ class Conlabz_CrConnect_Model_Search
         $categoryFilter['query_key'] = "category";
         $categoryFilter['type'] = "dropdown";
 
-        $rootcatId = Mage::app()->getStore()->getRootCategoryId();
+        $rootcatId = Mage::app()->getStore($store)->getRootCategoryId();
         $categories = Mage::getModel('catalog/category')->getCategories($rootcatId);
 
 
@@ -83,7 +83,7 @@ class Conlabz_CrConnect_Model_Search
             $category = Mage::getModel("catalog/category")->load($category);
             $products->addCategoryFilter($category);
         }
-        if ($product) {
+        if (!empty($product)) {
             $products->addFieldToFilter("name", array("like" => "%{$product}%"));
         }
 
@@ -94,7 +94,7 @@ class Conlabz_CrConnect_Model_Search
         $search['settings']['image_size_editable'] = true;
 
         $items = array();
-        if ($category || $product) {
+        if ($products->getSize() > 0) {
             foreach ($products as $product) {
                 $item = array();
                 $item['title'] = $product->getName();

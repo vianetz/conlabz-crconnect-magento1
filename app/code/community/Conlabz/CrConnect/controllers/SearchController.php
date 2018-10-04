@@ -22,7 +22,7 @@ class Conlabz_CrConnect_SearchController extends Mage_Core_Controller_Front_Acti
             $returnData = array();
             switch ($action) {
                 case 'filter':
-                    $returnData = $search->getFilter();
+                    $returnData = $search->getFilter($store);
                     break;
                 case 'search':
                     $category = $this->getRequest()->getParam('category', false);
