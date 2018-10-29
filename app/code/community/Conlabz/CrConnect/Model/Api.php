@@ -459,6 +459,25 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
         }
     }
 
+    public function formsSendUnsubscribeMail($customer, $groupId = 0)
+    {
+        if ($this->isConnected()) {
+            if (!$customer) {
+                $customer = Mage::getSingleton('customer/session')->getCustomer();
+            }
+
+            $formId = $this->_helper->getFormsIds($groupId, true);
+            $result = $this->_client->formsSendUnsubscribeMail($this->_apiKey, $formId, $customer->getEmail());
+            if ($result->status === self::SUCCESS_STATUS) {
+                return true;
+            } else {
+                $this->_helper->log("during formsSendUnsubscribeMail :: ERROR");
+                $this->_helper->log($result->message);
+            }
+            return false;
+        }
+    }
+
     /**
      * Sync data between Magento and Cleverreach
      */

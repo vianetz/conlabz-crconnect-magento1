@@ -19,6 +19,14 @@ class Conlabz_CrConnect_Model_Subscriber extends Mage_Core_Model_Abstract
     }
 
     /**
+     * Send unsubscribe email for customer
+     */
+    public function formsSendUnsubscribeMail($customer = false, $groupId = 0)
+    {
+        return Mage::getModel("crconnect/api")->formsSendUnsubscribeMail($customer, $groupId);
+    }
+
+    /**
      *  Subscribe cusotmer
      */
     public function unsubscribe($email = false, $groupId = 0)
@@ -49,8 +57,12 @@ class Conlabz_CrConnect_Model_Subscriber extends Mage_Core_Model_Abstract
                 }
             } else {
                 if ($subscriber->isSubscribed()) {
-                    $status = Mage::getModel("crconnect/subscriber")->unsubscribe($email);
-                    Mage::getSingleton('core/session')->addSuccess(Mage::helper('crconnect')->__('The subscription has been removed.'));
+                    $status = Mage::getModel("newsletter/subscriber")->unsubscribe();
+                    if (Mage::helper("crconnect")->isDoubleOptOutEnabled()) {
+                        Mage::getSingleton('core/session')->addSuccess(Mage::helper('crconnect')->__('Unsubscribe request has been sent.'));
+                    } else {
+                        Mage::getSingleton('core/session')->addSuccess(Mage::helper('crconnect')->__('The subscription has been removed.'));
+                    }
                 }
             }
 
@@ -67,8 +79,12 @@ class Conlabz_CrConnect_Model_Subscriber extends Mage_Core_Model_Abstract
                     }
                 } else {
                     if ($subscriber->isSubscribed($groupId)) {
-                        $status = Mage::getModel("crconnect/subscriber")->unsubscribe($email, $groupId);
-                        Mage::getSingleton('core/session')->addSuccess(Mage::helper('crconnect')->__('The subscription has been removed.'));
+                        $status = Mage::getModel("newsletter/subscriber")->unsubscribe($email, $groupId);
+                        if (Mage::helper("crconnect")->isDoubleOptOutEnabled()) {
+                            Mage::getSingleton('core/session')->addSuccess(Mage::helper('crconnect')->__('Unsubscribe request has been sent.'));
+                        } else {
+                            Mage::getSingleton('core/session')->addSuccess(Mage::helper('crconnect')->__('The subscription has been removed.'));
+                        }
                     }
                 }
             }
