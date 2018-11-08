@@ -14,6 +14,7 @@ class Conlabz_CrConnect_Helper_Data extends Mage_Core_Helper_Abstract
     const XML_GROUP_SEPARATION_CONFIG_PATH = "crroot/crconnect/auto_separate";
     const XML_GROUP_KEYS = "crroot/crconnect/groups_keys";
     const XML_PATH_LOGGED_CONFIRM_EMAIL_TEMPLATE = 'crroot/crconnect/confirm_newsletter_logged';
+    const XML_PATH_LOGGED_CONFIRM_UNSUBSCRIPTION = 'crroot/crconnect/confirm_unsubscription';
     const XML_IS_SHOW_CUSTOMER_GROUP = 'crroot/crconnect/showgroup';
 
     const XML_FEED_PASSWORD = 'crroot/csconnect_search/password';
@@ -65,6 +66,14 @@ class Conlabz_CrConnect_Helper_Data extends Mage_Core_Helper_Abstract
     public function isDoubleOptInEnabled()
     {
         return $this->getConfigForStore(self::XML_PATH_LOGGED_CONFIRM_EMAIL_TEMPLATE);
+    }
+
+    /**
+     * Check if Double OptOut enabled
+     */
+    public function isDoubleOptOutEnabled()
+    {
+        return $this->getConfigForStore(self::XML_PATH_LOGGED_CONFIRM_UNSUBSCRIPTION);
     }
 
     /**
