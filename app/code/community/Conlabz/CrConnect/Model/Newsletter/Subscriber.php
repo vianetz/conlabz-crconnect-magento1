@@ -53,18 +53,11 @@ class Conlabz_CrConnect_Model_Newsletter_Subscriber extends Mage_Newsletter_Mode
 
     public function unsubscribe($email = NULL, $groupId = 0)
     {
-        if (Mage::helper("customer")->isLoggedIn()) {
-            $customerSession = Mage::getSingleton('customer/session');
-            $customer = $customerSession->getCustomer();
-        } else {
-            $customer = Mage::getModel("customer/customer")->setWebsiteId(Mage::app()->getWebsite()->getId())->loadByEmail($email);
-        }
-
         if ($this->isSubscribed($groupId)) {
             if (Mage::helper("crconnect")->isDoubleOptOutEnabled()) {
-                return Mage::getModel("crconnect/subscriber")->formsSendUnsubscribeMail($customer, $groupId);
+                return Mage::getModel("crconnect/subscriber")->formsSendUnsubscribeMail($email, $groupId);
             } else {
-                return Mage::getModel("crconnect/subscriber")->unsubscribe($customer, $groupId);
+                return Mage::getModel("crconnect/subscriber")->unsubscribe($email, $groupId);
             }
         }
 

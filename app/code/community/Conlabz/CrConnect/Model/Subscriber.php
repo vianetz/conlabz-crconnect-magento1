@@ -21,9 +21,9 @@ class Conlabz_CrConnect_Model_Subscriber extends Mage_Core_Model_Abstract
     /**
      * Send unsubscribe email for customer
      */
-    public function formsSendUnsubscribeMail($customer = false, $groupId = 0)
+    public function formsSendUnsubscribeMail($email = false, $groupId = 0)
     {
-        return Mage::getModel("crconnect/api")->formsSendUnsubscribeMail($customer, $groupId);
+        return Mage::getModel("crconnect/api")->formsSendUnsubscribeMail($email, $groupId);
     }
 
     /**
@@ -57,7 +57,7 @@ class Conlabz_CrConnect_Model_Subscriber extends Mage_Core_Model_Abstract
                 }
             } else {
                 if ($subscriber->isSubscribed()) {
-                    $status = Mage::getModel("newsletter/subscriber")->unsubscribe();
+                    $status = Mage::getModel("newsletter/subscriber")->unsubscribe($email);
                     if (Mage::helper("crconnect")->isDoubleOptOutEnabled()) {
                         Mage::getSingleton('core/session')->addSuccess(Mage::helper('crconnect')->__('Unsubscribe request has been sent.'));
                     } else {
