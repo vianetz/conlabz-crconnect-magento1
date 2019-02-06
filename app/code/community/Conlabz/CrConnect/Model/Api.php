@@ -428,6 +428,8 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
 
                 if ($result->status == self::SUCCESS_STATUS) {
                     return true;
+                } else {
+                    Mage::getSingleton("core/session")->addSuccess($this->_helper->__("This Email already in our database"));
                 }
 
             } else {
@@ -451,7 +453,6 @@ class Conlabz_CrConnect_Model_Api extends Mage_Core_Model_Abstract
                         }
                     } else {
                         Mage::getSingleton("core/session")->addError($this->_helper->__("This Email already in our database"));
-
                     }
                 }
             }

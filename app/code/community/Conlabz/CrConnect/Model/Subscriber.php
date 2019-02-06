@@ -7,7 +7,7 @@ class Conlabz_CrConnect_Model_Subscriber extends Mage_Core_Model_Abstract
      */
     public function subscribe($customer = false, $groupId = 0)
     {
-        return Mage::getModel("crconnect/api")->subscribe($customer, $groupId);
+        return Mage::getSingleton('crconnect/api')->subscribe($customer, $groupId);
     }
 
     /**
@@ -15,7 +15,7 @@ class Conlabz_CrConnect_Model_Subscriber extends Mage_Core_Model_Abstract
      */
     public function formsSendActivationMail($customer = false, $groupId = 0)
     {
-        return Mage::getModel("crconnect/api")->formsSendActivationMail($customer, $groupId);
+        return Mage::getSingleton('crconnect/api')->formsSendActivationMail($customer, $groupId);
     }
 
     /**
@@ -23,7 +23,7 @@ class Conlabz_CrConnect_Model_Subscriber extends Mage_Core_Model_Abstract
      */
     public function formsSendUnsubscribeMail($email = false, $groupId = 0)
     {
-        return Mage::getModel("crconnect/api")->formsSendUnsubscribeMail($email, $groupId);
+        return Mage::getSingleton('crconnect/api')->formsSendUnsubscribeMail($email, $groupId);
     }
 
     /**
@@ -31,12 +31,12 @@ class Conlabz_CrConnect_Model_Subscriber extends Mage_Core_Model_Abstract
      */
     public function unsubscribe($email = false, $groupId = 0)
     {
-        return Mage::getModel("crconnect/api")->unsubscribe($email, $groupId);
+        return Mage::getSingleton('crconnect/api')->unsubscribe($email, $groupId);
     }
 
     public function updateCustomer($customer, $groupId = 0)
     {
-        return Mage::getModel("crconnect/api")->update($customer, $groupId);
+        return Mage::getSingleton('crconnect/api')->update($customer, $groupId);
     }
 
     public function updateSubscription($email, Mage_Core_Controller_Request_Http $request)

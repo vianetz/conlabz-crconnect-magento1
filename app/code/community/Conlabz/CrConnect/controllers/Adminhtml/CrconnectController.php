@@ -6,7 +6,7 @@ class Conlabz_Crconnect_Adminhtml_CrconnectController extends Mage_Adminhtml_Con
      */
     public function synchronizeAction()
     {
-        $syncedUsers = Mage::getModel("crconnect/api")->synchronize();
+        $syncedUsers = Mage::getSingleton('crconnect/api')->synchronize();
         $result = array();
 
         if ($syncedUsers !== false) {

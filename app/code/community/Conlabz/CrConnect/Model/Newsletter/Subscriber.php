@@ -12,7 +12,7 @@ class Conlabz_CrConnect_Model_Newsletter_Subscriber extends Mage_Newsletter_Mode
         if (!$this->getEmail()) {
             $this->setEmail(Mage::getSingleton('customer/session')->getCustomer()->getEmail());
         }
-        return Mage::getModel("crconnect/api")->isSubscribed($this->getEmail(), $groupId);
+        return Mage::getSingleton('crconnect/api')->isSubscribed($this->getEmail(), $groupId);
     }
 
     /**
@@ -43,13 +43,13 @@ class Conlabz_CrConnect_Model_Newsletter_Subscriber extends Mage_Newsletter_Mode
             return false;
         }
     }
+
     public function sendConfirmationSuccessEmail()
     {
         if (!Mage::helper("crconnect")->isDoubleOptInEnabled()) {
             parent::sendConfirmationSuccessEmail();
         }
     }
-
 
     public function unsubscribe($email = NULL, $groupId = 0)
     {

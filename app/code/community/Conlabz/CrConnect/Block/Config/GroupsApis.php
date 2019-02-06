@@ -51,7 +51,7 @@ class Conlabz_CrConnect_Block_Config_GroupsApis extends Mage_Adminhtml_Block_Sys
         $inputName  = $this->getElement()->getName() . '[#{_id}][' . $columnName . ']';
         $inputId  = '#{_id}_' . $columnName . '';
 
-        $api = Mage::getModel("crconnect/api");
+        $api = Mage::getSingleton('crconnect/api');
         $groups = array();
         if ($api->isConnected()) {
             $groups = $api->getGroupsForKey(Mage::helper('crconnect')->getApiKey());

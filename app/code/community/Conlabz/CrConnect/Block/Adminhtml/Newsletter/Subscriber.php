@@ -18,7 +18,7 @@ class Conlabz_CrConnect_Block_Adminhtml_Newsletter_Subscriber extends Mage_Admin
         $errorList = array();
         $listInformation = array();
 
-        $api = Mage::getModel("crconnect/api");
+        $api = Mage::getSingleton('crconnect/api');
         
         if ($api->isConnected()) {
             $clientDetails = $api->clientGetDetails();

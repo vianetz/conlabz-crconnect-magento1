@@ -91,7 +91,7 @@ class Conlabz_CrConnect_Model_Observer
         $order = Mage::getModel('sales/order')->load($lastOrderId);
         $email = $order->getCustomerEmail();
 
-        if (Mage::helper("crconnect")->isTrackingEnabled() && (Mage::helper("crconnect")->isForceSyncEnabled() || Mage::getModel('crconnect/api')->isSubscribed($email))) {
+        if (Mage::helper("crconnect")->isTrackingEnabled() && (Mage::helper("crconnect")->isForceSyncEnabled() || Mage::getSingleton('crconnect/api')->isSubscribed($email))) {
             $items = $order->getAllItems();
             if ($items) {
                 $tmpItems = array();
@@ -112,7 +112,7 @@ class Conlabz_CrConnect_Model_Observer
                     }
                     $tmpItems[] = $tmpItem;
                 }
-                Mage::getModel("crconnect/api")->receiverAddOrder($email, $tmpItems);
+                Mage::getSingleton('crconnect/api')->receiverAddOrder($email, $tmpItems);
             }
         }
     }
@@ -154,7 +154,7 @@ class Conlabz_CrConnect_Model_Observer
                 ->setWebsiteId(Mage::app()->getStore()->getWebsiteId())
                 ->loadByEmail($email);
 
-            if (Mage::helper("crconnect")->isForceSyncEnabled() && Mage::getModel('crconnect/api')->isConnected() && (Mage::getModel('crconnect/api')->isSubscribed($email) || $subscribe)) {
+            if (Mage::helper("crconnect")->isForceSyncEnabled() && Mage::getSingleton('crconnect/api')->isConnected() && (Mage::getSingleton('crconnect/api')->isSubscribed($email) || $subscribe)) {
                 Mage::helper("crconnect")->log("Force sync orders enabled");
 
                 if ($customer->getEmail()) {
@@ -194,9 +194,9 @@ class Conlabz_CrConnect_Model_Observer
                 }
 
                 if ($crReceiver !== NULL) {
-                    $result = Mage::getModel("crconnect/api")->receiverUpdate($crReceiver, $customer->getGroupId());
+                    $result = Mage::getSingleton('crconnect/api')->receiverUpdate($crReceiver, $customer->getGroupId());
                     if ($result->status !== 'SUCCESS') {
-                        $result = Mage::getModel("crconnect/api")->receiverAdd($crReceiver, $customer->getGroupId());
+                        $result = Mage::getSingleton('crconnect/api')->receiverAdd($crReceiver, $customer->getGroupId());
                     }
                     Mage::helper("crconnect")->log($result);
                 }
@@ -252,7 +252,7 @@ class Conlabz_CrConnect_Model_Observer
     {
         $session = Mage::getSingleton('adminhtml/session');
 
-        $setupResult = Mage::getModel('crconnect/api')->setupDefaultCleverReachList();
+        $setupResult = Mage::getSingleton('crconnect/api')->setupDefaultCleverReachList();
         if (!$setupResult) {
             $session->addError(Mage::helper('crconnect')->__("Could not connect to or receive any data from CleverReach. Please check your API key, selected group(s) and form(s)."));
         }

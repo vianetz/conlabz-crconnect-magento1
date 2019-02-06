@@ -57,7 +57,7 @@ class Conlabz_CrConnect_Block_Adminhtml_Customer_Edit_Tab_Newsletter extends Mag
                 )
             );
             
-            $ifCustomSubscribed = Mage::getModel('crconnect/api')->isSubscribed(
+            $ifCustomSubscribed = Mage::getSingleton('crconnect/api')->isSubscribed(
                 $customer->getEmail(),
                 $customer->getGroupId()
             );

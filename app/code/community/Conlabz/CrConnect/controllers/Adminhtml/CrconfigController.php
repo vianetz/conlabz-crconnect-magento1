@@ -6,7 +6,7 @@ class Conlabz_Crconnect_Adminhtml_CrconfigController extends Mage_Adminhtml_Cont
     public function confirmKeyAction()
     {
         $apiKey = $this->getRequest()->getParam("crconnectkey");
-        $api = Mage::getModel("crconnect/api");
+        $api = Mage::getSingleton('crconnect/api');
         if ($api->isConnected()) {
             $groups = $api->getGroupsForKey($apiKey);
             if ($groups) {
@@ -22,7 +22,7 @@ class Conlabz_Crconnect_Adminhtml_CrconfigController extends Mage_Adminhtml_Cont
         $groupId = $this->getRequest()->getParam("group");
         $apiKey = $this->getRequest()->getParam("crconnectkey");
 
-        $api = Mage::getModel("crconnect/api");
+        $api = Mage::getSingleton('crconnect/api');
         if ($api->isConnected()) {
             $forms = $api->getFormsForGroup($apiKey, $groupId);
             if ($forms) {

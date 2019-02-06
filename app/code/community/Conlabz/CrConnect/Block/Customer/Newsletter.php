@@ -6,7 +6,7 @@ class Conlabz_CrConnect_Block_Customer_Newsletter extends Mage_Customer_Block_Ne
     public function __construct()
     {
         $this->setCustomerGroupId(Mage::getSingleton('customer/session')->getCustomerGroupId());
-        $this->_api = Mage::getModel('crconnect/api');
+        $this->_api = Mage::getSingleton('crconnect/api');
 
         parent::__construct();
     }
