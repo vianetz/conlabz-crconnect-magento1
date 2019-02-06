@@ -154,7 +154,7 @@ class Conlabz_CrConnect_Model_Observer
                 ->setWebsiteId(Mage::app()->getStore()->getWebsiteId())
                 ->loadByEmail($email);
 
-            if (Mage::helper("crconnect")->isForceSyncEnabled() && (Mage::getModel('crconnect/api')->isSubscribed($email) || $subscribe)) {
+            if (Mage::helper("crconnect")->isForceSyncEnabled() && Mage::getModel('crconnect/api')->isConnected() && (Mage::getModel('crconnect/api')->isSubscribed($email) || $subscribe)) {
                 Mage::helper("crconnect")->log("Force sync orders enabled");
 
                 if ($customer->getEmail()) {
