@@ -91,7 +91,7 @@ class Conlabz_CrConnect_Model_Observer
         $order = Mage::getModel('sales/order')->load($lastOrderId);
         $email = $order->getCustomerEmail();
 
-        if (Mage::helper("crconnect")->isTrackingEnabled() && (Mage::helper("crconnect")->isForceSyncEnabled() || Mage::getSingleton('crconnect/api')->isSubscribed($email))) {
+        if (Mage::helper("crconnect")->isTrackingEnabled() && Mage::getSingleton('crconnect/api')->isConnected() && (Mage::helper("crconnect")->isForceSyncEnabled() || Mage::getSingleton('crconnect/api')->isSubscribed($email))) {
             $items = $order->getAllItems();
             if ($items) {
                 $tmpItems = array();
