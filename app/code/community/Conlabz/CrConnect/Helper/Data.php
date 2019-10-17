@@ -362,16 +362,18 @@ class Conlabz_CrConnect_Helper_Data extends Mage_Core_Helper_Abstract
             $orders = Mage::getModel('sales/order')->getCollection()->addFieldToSelect(array('entity_id', 'increment_id'))->addFieldToFilter('customer_email', $newEmail);
             foreach ($orders as $order)
             {
+                /** @var Mage_Sales_Model_Order $order */
                 $items = $order->getAllVisibleItems();
                 foreach ($items as $item)
                 {
+                    /** @var Mage_Sales_Model_Order_Item $items */
                     $crOrder = array();
                     $crOrder["order_id"] = $order->getIncrementId();
                     $crOrder["product"] = $item->getName();
                     $crOrder["product_id"] = $item->getProductId();
                     $crOrder["price"] = round($item->getPrice(), 2);
                     $crOrder["quantity"] = (integer)$item->getQtyOrdered();
-                    $crOrder["purchase_date"] = strtotime($item->getCreatedAt());
+                    $crOrder["purchase_date"] = strtotime($order->getCreatedAt());
                     $crOrder["currency"] = $order->getData('order_currency_code');
                     $crOrder["source"] = "MAGENTO Order";
 
