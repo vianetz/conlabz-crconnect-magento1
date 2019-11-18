@@ -97,12 +97,12 @@ class Conlabz_CrConnect_Model_Observer
                 $tmpItems = array();
                 foreach ($items as $item) {
                     $tmpItem = array();
-                    $tmpItem["order_id"] = $lastOrderId;
+                    $tmpItem["order_id"] = $order->getIncrementId();
                     $tmpItem["product"] = $item->getName();
                     $tmpItem["product_id"] = $item->getProductId();
                     $tmpItem["price"] = round($item->getPrice(), 2);
                     $tmpItem["quantity"] = (integer)$item->getQtyOrdered();
-                    $tmpItem["purchase_date"] = strtotime($item->getCreatedAt());
+                    $tmpItem["purchase_date"] = strtotime($order->getCreatedAt());
                     $tmpItem["currency"] = $order->getData('order_currency_code');
                     $tmpItem["source"] = "MAGENTO Order";
 
