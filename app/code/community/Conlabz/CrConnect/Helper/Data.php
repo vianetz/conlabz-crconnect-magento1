@@ -2,8 +2,7 @@
 
 class Conlabz_CrConnect_Helper_Data extends Mage_Core_Helper_Abstract
 {
-
-    const XML_WSDL_PATH = "http://api.cleverreach.com/soap/interface_v5.1.php?wsdl";
+    const XML_WSDL_PATH = "https://api.cleverreach.com/soap/interface_v5.1.php?wsdl";
     const XML_API_KEY_CONFIG_PATH = "crroot/crconnect/api_key";
     const XML_LIST_ID_CONFIG_PATH = "crroot/crconnect/list_id";
     const XML_FORM_ID_CONFIG_PATH = "crroot/crconnect/form_id";
@@ -103,9 +102,7 @@ class Conlabz_CrConnect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getDefaultListId()
     {
-
         return $this->getConfigForStore(self::XML_LIST_ID_CONFIG_PATH);
-
     }
 
     /**
@@ -115,9 +112,7 @@ class Conlabz_CrConnect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getDefaultFormId()
     {
-
         return $this->getConfigForStore(self::XML_FORM_ID_CONFIG_PATH);
-
     }
 
     /**
@@ -147,7 +142,6 @@ class Conlabz_CrConnect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function log($message)
     {
-
         Mage::log($message, null, "crconnect.log", true);
     }
 
@@ -162,18 +156,15 @@ class Conlabz_CrConnect_Helper_Data extends Mage_Core_Helper_Abstract
     /**
      * Get groups keys json value from system settings
      *
-     * @return json
+     * @return string json
      */
     public function getGroupsSystemValue()
     {
-
         return $this->getConfigForStore(self::XML_GROUP_KEYS);
-
     }
 
     public function getConfigForStore($path)
     {
-
         $newsletterConfig = Mage::getStoreConfig($path);
 
         if ($store = $this->_currentStoreId) {
@@ -216,7 +207,6 @@ class Conlabz_CrConnect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getGroupsIds($groupId = false, $defaultOnFail = false)
     {
-
         $newsletterConfig = unserialize($this->getConfigForStore(self::XML_GROUP_KEYS));
         $keysArray = array();
 
@@ -250,7 +240,6 @@ class Conlabz_CrConnect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getFormsIds($groupId = false, $defaultOnFail = false)
     {
-
         $newsletterConfig = unserialize($this->getConfigForStore(self::XML_GROUP_KEYS));
         $keysArray = array();
 
@@ -282,7 +271,6 @@ class Conlabz_CrConnect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function getFormsIdsByKeys()
     {
-
         $newsletterConfig = unserialize($this->getConfigForStore(self::XML_GROUP_KEYS));
 
         $keysArray = array();
@@ -404,9 +392,7 @@ class Conlabz_CrConnect_Helper_Data extends Mage_Core_Helper_Abstract
      */
     public function isShowDefaultGroup()
     {
-
         return $this->getConfigForStore(self::XML_IS_SHOW_CUSTOMER_GROUP);
-
     }
 
     /**
@@ -423,13 +409,10 @@ class Conlabz_CrConnect_Helper_Data extends Mage_Core_Helper_Abstract
 
     public function isDefaultGroupUser($groupId)
     {
-        if ($groupId != self::DEFAULT_GROUP_ID) {
-            return true;
-        }
-        return false;
+        return $groupId != self::DEFAULT_GROUP_ID;
     }
 
-    public function getM2eShippingMethods()
+    public function getM2eShippingMethods(): array
     {
         return array("m2eproshipping_m2eproshipping");
     }

@@ -27,7 +27,7 @@ class Conlabz_CrConnect_SubscriberController extends Mage_Newsletter_SubscriberC
     public function newAction()
     {
         if (!$this->_validateFormKey()) {
-            return $this->_redirect('*/*');
+            return $this->_redirect('');
         }
 
         if ($this->getRequest()->isPost() && $this->getRequest()->getPost('email')) {

@@ -2,7 +2,7 @@
 
 CleverReach Connect extension offers synchronization of your Magento newsletter subscribers and customers (imported from your orders if you like) with the CleverReach subscription groups.
 
-CleverReach email marketing tool (http://www.cleverreach.de) allows you to create professional emails online, dispatch them reliably, track their success and manage receivers. 
+[CleverReach email marketing tool](https://www.cleverreach.de) allows you to create professional emails online, dispatch them reliably, track their success and manage receivers. 
 
 CleverReach is equipped with a particularly user-friendly interface, which is used intuitively and without special knowledge.
 
@@ -12,7 +12,7 @@ Once set up, the Extension will handle subscriptions and unsubscribe requests. U
 
 ## Synchronisiert Ihre Magento-Abonnenten, -Kunden und Verkäufe mit der CleverReach E-Mail Marketing Software.
 
-Das "CleverReach E-Mail-Marketing-Tool" (http://www.cleverreach.de) erlaubt Ihnen, professionelle E-Mails online zu erstellen, verlässlich zu verteilen, deren Erfolg zu tracken und Empfänger zu verwalten.
+Das [CleverReach E-Mail-Marketing-Tool](https://www.cleverreach.de) erlaubt Ihnen, professionelle E-Mails online zu erstellen, verlässlich zu verteilen, deren Erfolg zu tracken und Empfänger zu verwalten.
 
 Die "CleverReach Connect"-Extension bietet Ihnen die Synchronisierung Ihrer Magento-Newsletterabonnenten und -Kunden, die nach Wunsch von Ihren Bestellungen importiert werden können, mit CleverReach-Abonnentengruppen.
 

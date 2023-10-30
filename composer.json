@@ -1,14 +1,24 @@
 {
-    "name": "conlabz/magex_crconnect",
-    "type": "magento-module",
-    "description": "Synchronizes your Magento subscribers, customers and sales with CleverReach Email Marketing Software.",
-    "authors": [
-        {
-            "name": "conlabz GmbH",
-            "email": "info@conlabz.de"
-        }
-    ],
-    "require": {
-        "magento-hackathon/magento-composer-installer": "*"
+  "name": "conlabz/magex_crconnect",
+  "type": "magento-module",
+  "description": "Synchronizes your Magento subscribers, customers and sales with CleverReach Email Marketing Software.",
+  "authors": [
+    {
+      "name": "conlabz GmbH",
+      "email": "info@conlabz.de"
+    },
+    {
+      "name": "Christoph Massmann",
+      "email": "cm@vianetz.com",
+      "role": "Developer"
     }
+  ],
+  "require": {
+    "php": "^7.4|^8.0",
+    "magento-hackathon/magento-composer-installer": "*",
+    "ext-soap": "*"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-master"
+  }
 }
