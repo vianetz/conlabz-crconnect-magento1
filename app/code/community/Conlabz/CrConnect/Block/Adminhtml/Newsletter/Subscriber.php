@@ -2,19 +2,15 @@
 
 class Conlabz_CrConnect_Block_Adminhtml_Newsletter_Subscriber extends Mage_Adminhtml_Block_Newsletter_Subscriber
 {
-
     protected $_successStatus = "SUCCESS";
     
     public function __construct()
     {
-    
         $this->setTemplate('crconnect/newsletter/subscriber/list.phtml');
-    
     }
     
     public function getSubscribersListData()
     {
-
         $errorList = array();
         $listInformation = array();
 
@@ -66,13 +62,9 @@ class Conlabz_CrConnect_Block_Adminhtml_Newsletter_Subscriber extends Mage_Admin
                     
                     $counter++;
                 }
-                
             }
-            
-            
         } else {
             $errorList[] = Mage::helper("crconnect")->__("Can not connect to CleverReach account. Please check your Cleverreach settings.");
-    
         }
         
         //Get amount of active and not active subscribers in system
@@ -83,6 +75,5 @@ class Conlabz_CrConnect_Block_Adminhtml_Newsletter_Subscriber extends Mage_Admin
         $listInformation['inactive_subscribers'] = $inactiveSubscribers;
         
         return array('error'=>$errorList, 'info'=>$listInformation);
-
     }
 }

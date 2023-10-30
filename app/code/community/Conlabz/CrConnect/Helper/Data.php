@@ -95,14 +95,9 @@ class Conlabz_CrConnect_Helper_Data extends Mage_Core_Helper_Abstract
         return Mage::getConfig()->saveConfig(self::XML_API_KEY_CONFIG_PATH, $key);
     }
 
-    /**
-     *  Get Default List Id
-     *
-     *  @return string - list Id
-     */
-    public function getDefaultListId()
+    public function getDefaultListId(): string
     {
-        return $this->getConfigForStore(self::XML_LIST_ID_CONFIG_PATH);
+        return (string)$this->getConfigForStore(self::XML_LIST_ID_CONFIG_PATH);
     }
 
     /**
@@ -163,19 +158,21 @@ class Conlabz_CrConnect_Helper_Data extends Mage_Core_Helper_Abstract
         return $this->getConfigForStore(self::XML_GROUP_KEYS);
     }
 
-    public function getConfigForStore($path)
+    public function getConfigForStore(string $path)
     {
         $newsletterConfig = Mage::getStoreConfig($path);
 
         if ($store = $this->_currentStoreId) {
             return Mage::getStoreConfig($path, $store);
         }
+
         if ($website = $this->_currentWebsiteId) {
             $newsletterConfig = (array)Mage::getConfig()->getNode('websites/'.$website.'/'.$path);
             if (isset($newsletterConfig[0])) {
                 return $newsletterConfig[0];
             }
         }
+
 //        if ($website = Mage::getSingleton("adminhtml/session")->getCrCustomerWebsite($website)){
 //            $newsletterConfig = (array)Mage::getConfig()->getNode('websites/'.$website.'/'.$path);
 //            if (isset($newsletterConfig[0])){
@@ -190,11 +187,13 @@ class Conlabz_CrConnect_Helper_Data extends Mage_Core_Helper_Abstract
                 $newsletterConfig = (array)Mage::getConfig()->getNode('websites/'.$website.'/'.$path);
                 if (isset($newsletterConfig[0])) {
                     $newsletterConfig = $newsletterConfig[0];
+                } else {
+                    $newsletterConfig = '';
                 }
             }
         }
-        return $newsletterConfig;
 
+        return $newsletterConfig;
     }
 
     /**

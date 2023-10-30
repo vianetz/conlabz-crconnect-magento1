@@ -1,4 +1,5 @@
 <?php
+
 class Conlabz_CrConnect_Block_Config_Url extends Mage_Adminhtml_Block_System_Config_Form_Field
 {
     /*

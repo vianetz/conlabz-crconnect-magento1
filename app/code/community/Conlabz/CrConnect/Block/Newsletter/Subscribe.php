@@ -20,13 +20,8 @@
 
 class Conlabz_CrConnect_Block_Newsletter_Subscribe extends Mage_Newsletter_Block_Subscribe
 {
-    /**
-     * @return mixed|string
-     */
-    protected function _toHtml()
+    protected function _toHtml(): string
     {
-        $html = parent::_toHtml();
-        $html = str_replace('</form>', $this->getBlockHtml('formkey').'</form>', $html);
-        return $html;
+       return str_replace('</form>', $this->getBlockHtml('formkey').'</form>', parent::_toHtml());
     }
 }

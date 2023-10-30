@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <config>
     <sections>
-    	<crroot translate="label" module="crconnect">
+        <crroot translate="label" module="crconnect">
             <class>separator-top</class>
             <label>CleverReach Connect</label>
             <tab>customer</tab>
@@ -9,7 +9,7 @@
             <show_in_default>1</show_in_default>
             <show_in_website>1</show_in_website>
             <show_in_store>1</show_in_store>
-        	<groups>
+            <groups>
                     <crconnect translate="label">
                         <label>CleverReach Settings</label>
                         <frontend_type>text</frontend_type>
@@ -171,7 +171,7 @@
                             </password>
                         </fields>
                     </csconnect_search>
-        	</groups>
+            </groups>
         </crroot>
     </sections>
 </config>

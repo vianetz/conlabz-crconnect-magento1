@@ -1,11 +1,11 @@
 <?php
+
 class Conlabz_CrConnect_Block_Config_GroupsApis extends Mage_Adminhtml_Block_System_Config_Form_Field_Array_Abstract
 {
-    protected $magentoOptions;
+    protected array $magentoOptions;
 
     public function __construct()
     {
-        
         /*
          * Prepare settings columns
          */
@@ -35,14 +35,13 @@ class Conlabz_CrConnect_Block_Config_GroupsApis extends Mage_Adminhtml_Block_Sys
         foreach ($allGroups as $key => $allGroup) {
             $this->magentoOptions[$key] = $allGroup;
         }
-        
     }
+
     /*
      * Render Template
      */
     protected function _renderCellTemplate($columnName)
     {
-        
         if (empty($this->_columns[$columnName])) {
             throw new Exception('Wrong column name specified.');
         }
@@ -86,8 +85,6 @@ class Conlabz_CrConnect_Block_Config_GroupsApis extends Mage_Adminhtml_Block_Sys
             default:
 //                $rendered = '<input type="text" name="' . $inputName . '" value="#{' . $columnName . '}" ' . ($column['size'] ? 'size="' . $column['size'] . '"' : '') . '/>';
                 break;
-            
-            
         }
         
         return $rendered;

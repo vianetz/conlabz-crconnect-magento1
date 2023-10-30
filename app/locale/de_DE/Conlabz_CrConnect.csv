@@ -15,7 +15,7 @@
 "API keys for user groups","API Schlüssel für Nutzergruppen"
 "Hide 'General' subscription for groups","Das 'Allgemein' Abo für Gruppen verstecken"
 "If 'No' - then not 'General' user group users, will have possibility to subscribe for both: 'General' and '% Group' newsletter. If 'Yes' - just to '% Groups' newsletter","Bei 'Nein' - Nutzer, die nicht zur Nutzergruppe 'Allgemein' gehören, können sowohl den Newsletter 'Allgemein', als auch den Newsletter '% Gruppe' abonnieren. Bei 'Ja' - Nutzer können nur die entsprechenden '% Gruppe' Newsletter abonnieren"
-"CleverReach Search Settings","CleverReach Einstellungen"
+"CleverReach Search Settings","CleverReach Suche Einstellungen"
 "Feed-URL","Feed-URL"
 "Copy this Feed-URL to your CleverReach account. Store Id is optional parameter, add it in case, if you want use feed for other stores","Kopieren Sie diese Feed-URL in Ihren CleverReach-Account. Die Store ID ist optional. Fügen Sie diese hinzu, wenn Sie den Feed noch für andere Stores nutzen wollen"
 "Password","Passwort"
